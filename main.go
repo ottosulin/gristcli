@@ -128,6 +128,8 @@ func main() {
 	case <-statusCh:
 	}
 
+	log.Println("Started Grist container, navigate to http://localhost:8484")
+
 	out, err := cli.ContainerLogs(ctx, resp.ID, types.ContainerLogsOptions{ShowStdout: true})
 	if err != nil {
 		panic(err)
