@@ -16,7 +16,6 @@ import (
 	"github.com/docker/docker/api/types/container"
 	"github.com/docker/docker/api/types/mount"
 	"github.com/docker/docker/client"
-	"github.com/docker/docker/pkg/stdcopy"
 	"github.com/docker/go-connections/nat"
 )
 
@@ -119,6 +118,8 @@ func main() {
 		panic(err)
 	}
 
+	log.Println("Started Grist container, navigate to http://localhost:8484")
+
 	statusCh, errCh := cli.ContainerWait(ctx, resp.ID, container.WaitConditionNotRunning)
 	select {
 	case err := <-errCh:
@@ -128,13 +129,11 @@ func main() {
 	case <-statusCh:
 	}
 
-	log.Println("Started Grist container, navigate to http://localhost:8484")
-
-	out, err := cli.ContainerLogs(ctx, resp.ID, types.ContainerLogsOptions{ShowStdout: true})
-	if err != nil {
-		panic(err)
-	}
-	stdcopy.StdCopy(os.Stdout, os.Stderr, out)
+	// out, err := cli.ContainerLogs(ctx, resp.ID, types.ContainerLogsOptions{ShowStdout: true})
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// stdcopy.StdCopy(os.Stdout, os.Stderr, out)
 
 	<-done
 	fmt.Println("Exiting..")
